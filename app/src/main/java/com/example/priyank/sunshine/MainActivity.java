@@ -1,15 +1,17 @@
 package com.example.priyank.sunshine;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -60,6 +62,26 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            //Time to create some fake data to populate the listView!
+            ArrayList<String> forecast =new ArrayList<String>();
+            forecast.add("Today - Sunny - 83/64");
+            forecast.add("Tomorrow - Foggy - 64/50");
+            forecast.add("Wed - Storm - 68/64");
+            forecast.add("Thurs - Rainy - 60/56");
+            forecast.add("Fri - Foggy - 65/64");
+            forecast.add("Sat - Sunny - 85/64");
+            forecast.add("Sun - Cloudy - 70/64");
+
+            //Creating Adapter for the listView
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
+
+            //Creating reference to the listView Forecaste
+            ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
+
+            //setting the adapter to the listView
+            listViewForecast.setAdapter(adapter);
+
             return rootView;
         }
     }
