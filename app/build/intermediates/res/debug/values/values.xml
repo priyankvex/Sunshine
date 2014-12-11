@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- From: file:/home/priyank/AndroidStudioProjects/Sunshine/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <array name="pref_unit_options">
+        <item>"Metric"</item>
+        <item>"Imperial"</item>
+    </array>
+    <array name="pref_unit_values">
+        <item>"metric"</item>
+        <item>"imperial"</item>
+    </array>
     <!-- From: file:/home/priyank/AndroidStudioProjects/Sunshine/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.2/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="drawerArrowStyle"/>
@@ -168,6 +178,9 @@
     <string name="pref_location_default">482002</string>
     <string name="pref_location_key">location</string>
     <string name="pref_location_label">Location</string>
+    <string name="pref_unit_imperial">imperial</string>
+    <string name="pref_unit_key">unit</string>
+    <string name="pref_unit_metric">metric</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <!-- From: file:/home/priyank/AndroidStudioProjects/Sunshine/app/src/main/res/values/styles.xml -->
