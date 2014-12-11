@@ -4,9 +4,12 @@ package com.example.priyank.sunshine;
  * Created by priyank on 11/12/14.
  */
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,7 @@ public class ForecastFragment extends Fragment {
 
     ArrayAdapter<String> forecastAdapter;
     ListView listViewForecast;
+    SharedPreferences prefs;
 
     public ForecastFragment() {
     }
@@ -62,8 +65,12 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh){
-            new FetchWeatherTask().execute("482002");
+            updateWeather();
             return true;
+        }
+        else if (id == R.id.action_settings){
+            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -80,13 +87,27 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String data = forecastAdapter.getItem(position).toString();
-                Toast t = Toast.makeText(getActivity(), data, Toast.LENGTH_LONG);
-                t.show();
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT , data);
+                startActivity(intent);
             }
         });
-        new FetchWeatherTask().execute("482002");
+
         return rootView;
 
+    }
+
+    //Helper method. Updates the weather by making the network call
+    private void updateWeather(){
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        new FetchWeatherTask().execute(location);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     // inner class for network call
@@ -280,12 +301,16 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(weatherForecast);
 
             List<String> forecast = new ArrayList<String>(Arrays.asList(weatherForecast));
+            for(int i = 0 ; i < weatherForecast.length; i++){
+                if( weatherForecast[i] != null){
+                    forecast.add(weatherForecast[i]);
+                }
+
+            }
             //Creating Adapter for the listView
-            Log.d("forecastWeather" , forecast.get(0));
             forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
             //setting the adapter to the listView
             listViewForecast.setAdapter(forecastAdapter);
-
             //That's it. App is showing up weather forecast from server! Hooray!
         }
     }
