@@ -15,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,9 +32,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class ForecastFragment extends Fragment {
+
+    ArrayAdapter<String> forecastAdapter;
+    ListView listViewForecast;
 
     public ForecastFragment() {
     }
@@ -66,25 +73,18 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //Time to create some fake data to populate the listView!
-        ArrayList<String> forecast = new ArrayList<String>();
-        forecast.add("Today - Sunny - 83/64");
-        forecast.add("Tomorrow - Foggy - 64/50");
-        forecast.add("Wed - Storm - 68/64");
-        forecast.add("Thurs - Rainy - 60/56");
-        forecast.add("Fri - Foggy - 65/64");
-        forecast.add("Sat - Sunny - 85/64");
-        forecast.add("Sun - Cloudy - 70/64");
-
-        //Creating Adapter for the listView
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
-
         //Creating reference to the listView Forecast
-        ListView listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listViewForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
 
-        //setting the adapter to the listView
-        listViewForecast.setAdapter(adapter);
-
+        listViewForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String data = forecastAdapter.getItem(position).toString();
+                Toast t = Toast.makeText(getActivity(), data, Toast.LENGTH_LONG);
+                t.show();
+            }
+        });
+        new FetchWeatherTask().execute("482002");
         return rootView;
 
     }
@@ -137,8 +137,6 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-
-                Log.d("FetchWeatherForecast" , url.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -195,7 +193,6 @@ public class ForecastFragment extends Fragment {
 
             }
 
-            Log.d("Forecast" , weatherForecast[0]);
             return weatherForecast;
         }
 
@@ -276,6 +273,20 @@ public class ForecastFragment extends Fragment {
             }
 
             return resultStrs;
+        }
+
+        @Override
+        protected void onPostExecute(String[] weatherForecast) {
+            super.onPostExecute(weatherForecast);
+
+            List<String> forecast = new ArrayList<String>(Arrays.asList(weatherForecast));
+            //Creating Adapter for the listView
+            Log.d("forecastWeather" , forecast.get(0));
+            forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
+            //setting the adapter to the listView
+            listViewForecast.setAdapter(forecastAdapter);
+
+            //That's it. App is showing up weather forecast from server! Hooray!
         }
     }
 
