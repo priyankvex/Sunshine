@@ -1321,6 +1321,8 @@ containing a value of this type.
         public static final int action_mode_close_button=0x7f0a0020;
         public static final int action_refresh=0x7f0a0044;
         public static final int action_settings=0x7f0a0043;
+        public static final int action_share=0x7f0a0046;
+        public static final int action_show_location=0x7f0a0045;
         public static final int activity_chooser_view_content=0x7f0a0021;
         public static final int always=0x7f0a0016;
         public static final int beginning=0x7f0a0013;
@@ -1436,16 +1438,17 @@ containing a value of this type.
         public static final int abc_toolbar_collapse_description=0x7f0c000f;
         public static final int action_refresh=0x7f0c0010;
         public static final int action_settings=0x7f0c0011;
-        public static final int app_name=0x7f0c0012;
-        public static final int hello_world=0x7f0c0013;
-        public static final int pref_location_default=0x7f0c0014;
-        public static final int pref_location_key=0x7f0c0015;
-        public static final int pref_location_label=0x7f0c0016;
-        public static final int pref_unit_imperial=0x7f0c0017;
-        public static final int pref_unit_key=0x7f0c0018;
-        public static final int pref_unit_metric=0x7f0c0019;
-        public static final int title_activity_detail=0x7f0c001a;
-        public static final int title_activity_settings=0x7f0c001b;
+        public static final int action_share=0x7f0c0012;
+        public static final int app_name=0x7f0c0013;
+        public static final int hello_world=0x7f0c0014;
+        public static final int pref_location_default=0x7f0c0015;
+        public static final int pref_location_key=0x7f0c0016;
+        public static final int pref_location_label=0x7f0c0017;
+        public static final int pref_unit_imperial=0x7f0c0018;
+        public static final int pref_unit_key=0x7f0c0019;
+        public static final int pref_unit_metric=0x7f0c001a;
+        public static final int title_activity_detail=0x7f0c001b;
+        public static final int title_activity_settings=0x7f0c001c;
     }
     public static final class style {
         /**  Customize your theme here. 

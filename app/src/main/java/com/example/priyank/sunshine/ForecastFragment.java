@@ -40,7 +40,6 @@ import java.util.List;
 
 public class ForecastFragment extends Fragment {
 
-    ArrayAdapter<String> forecastAdapter;
     ListView listViewForecast;
     SharedPreferences prefs;
 
@@ -66,13 +65,29 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh){
             updateWeather();
-            return true;
         }
         else if (id == R.id.action_settings){
             Intent intent = new Intent(getActivity(), SettingsActivity.class);
             startActivity(intent);
         }
+        else if (id == R.id.action_show_location){
+            openPreferredLocationInMap();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openPreferredLocationInMap(){
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        Uri uri = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q" , location).build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+            startActivity(intent);
+        }
+        else{
+            Log.d("ForecastFragment" , "Couldn't show the location");
+        }
     }
 
     @Override
@@ -86,7 +101,7 @@ public class ForecastFragment extends Fragment {
         listViewForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String data = forecastAdapter.getItem(position).toString();
+                String data = parent.getItemAtPosition(position).toString();
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT , data);
                 startActivity(intent);
@@ -312,12 +327,13 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(weatherForecast);
 
             List<String> forecast = new ArrayList<String>(Arrays.asList(weatherForecast));
-            for(int i = 0 ; i < weatherForecast.length; i++){
+            for(int i = 0 ; i < 7; i++){
                 if( weatherForecast[i] != null){
                     forecast.add(weatherForecast[i]);
                 }
 
             }
+            ArrayAdapter<String> forecastAdapter;
             //Creating Adapter for the listView
             forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
             //setting the adapter to the listView

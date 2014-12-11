@@ -3,9 +3,12 @@ package com.example.priyank.sunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +23,12 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new DetailFragment())
                     .commit();
         }
-    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
+
     }
 
     @Override
@@ -53,9 +51,33 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class DetailFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        private final String LOG_TAG  = DetailFragment.class.getSimpleName();
+        private final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
+        private String mForecast;
+
+        public DetailFragment() {
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            super.onCreateOptionsMenu(menu, inflater);
+            inflater.inflate(R.menu.menu_detail, menu);
+
+            //Retrieve the share menu item
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+
+            android.support.v7.widget.ShareActionProvider mShareActionProvider = (android.support.v7.widget.ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+
+            if(mShareActionProvider != null){
+                mShareActionProvider.setShareIntent(createShareIntent());
+            }
+            else{
+                Log.d(LOG_TAG , "Can't create shared intent");
+            }
         }
 
         @Override
@@ -65,11 +87,19 @@ public class DetailActivity extends ActionBarActivity {
 
             // Getting the data form the intent
             Intent intent = getActivity().getIntent();
-            String data = intent.getStringExtra(Intent.EXTRA_TEXT);
-            if( intent !=  null && data !=  null){
-                ((TextView) rootView.findViewById(R.id.detail_textview)).setText(data);
+            mForecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if( intent !=  null && mForecast !=  null){
+                ((TextView) rootView.findViewById(R.id.detail_textview)).setText(mForecast);
             }
             return rootView;
+        }
+
+        private Intent createShareIntent(){
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT , mForecast+FORECAST_SHARE_HASHTAG);
+            return shareIntent;
         }
     }
 }

@@ -6,5 +6,8 @@
     <item android:id="@+id/action_refresh" android:title="@string/action_refresh"
         app:showAsAction="never"
         />
+    <item android:id="@+id/action_show_location"
+        android:title="Show Location"
+        />
 </menu>
 <!-- From: file:/home/priyank/AndroidStudioProjects/Sunshine/app/src/main/res/menu/forecast_fragment_menu.xml -->
