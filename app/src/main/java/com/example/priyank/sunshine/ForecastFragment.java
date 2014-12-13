@@ -229,6 +229,8 @@ public class ForecastFragment extends Fragment {
 
             }
 
+            Log.d("ForecastFragment", Arrays.toString(weatherForecast));
+
             return weatherForecast;
         }
 
@@ -326,13 +328,14 @@ public class ForecastFragment extends Fragment {
         protected void onPostExecute(String[] weatherForecast) {
             super.onPostExecute(weatherForecast);
 
-            List<String> forecast = new ArrayList<String>(Arrays.asList(weatherForecast));
+            List<String> forecast = new ArrayList<String>();
             for(int i = 0 ; i < 7; i++){
                 if( weatherForecast[i] != null){
                     forecast.add(weatherForecast[i]);
                 }
 
             }
+            Log.d("ForecastFragment", forecast.toString());
             ArrayAdapter<String> forecastAdapter;
             //Creating Adapter for the listView
             forecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, forecast);
